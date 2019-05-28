@@ -1,4 +1,5 @@
 # coding=utf-8
+# 根据关键字从花瓣网下载图片到MyGodData/imgs下。
 import os
 import shutil
 import urllib
@@ -8,7 +9,7 @@ import json as js
 from bs4 import BeautifulSoup
 
 
-def getImg(keyword, page, imageSaveDir, lastMaxPin=""):
+def getImg(keyword, imageSaveDir, maxcount=80, page=1):
     req = request.Request("https://huaban.com/search/?q=%s&type=pins&page=%s&per_page=20&wfl=1" % (
         urllib.parse.quote(keyword), page))
     print(req.full_url)
@@ -23,15 +24,19 @@ def getImg(keyword, page, imageSaveDir, lastMaxPin=""):
         requset_result = f.read().decode("utf-8")
     soup = BeautifulSoup(requset_result, "lxml")
     json = js.loads(soup.text)
+    download_count = 0
     for i in json['pins']:
         width = int(i['file']['width'])
         height = int(i['file']['height'])
         key = i['file']['key']
-        if width < 500 or height > 5000:
+        if width < 600 or height > 5000:
             print("jump %s:width = %s;height = %s" % (key, width, height))
             continue
+        download_count += 1
         saveImg("https://hbimg.huabanimg.com/%s" % key, "%s.jpg" % key, imageSaveDir)
-    print(type(json['pins']))
+        if download_count >= maxcount:
+            return
+    getImg(keyword, imageSaveDir,maxcount - download_count,page + 1)
 
 
 def saveImg(url, saved_name="desk_bg", img_path='imgs'):
@@ -81,6 +86,6 @@ def clear_images():
 if __name__ == '__main__':
     clear_images()
     my_god_data_path = os.path.abspath(os.path.join(os.getcwd(), "../../../MyGodData"))
-    getImg("精美", 20, my_god_data_path + "/images")
+    getImg("端午节", my_god_data_path + "/images")
 
 print("---------------------finsh------------------------")

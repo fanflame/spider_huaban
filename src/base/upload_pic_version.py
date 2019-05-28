@@ -1,3 +1,4 @@
+# 根据MyGodeData/imgs下图片资源生成image.json并更新version.json中的imageversion版本号
 import json
 import os
 
