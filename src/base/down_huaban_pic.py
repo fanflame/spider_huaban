@@ -1,5 +1,6 @@
 # coding=utf-8
 # 根据关键字从花瓣网下载图片到MyGodData/imgs下。
+# 执行完毕之后执行upload_pic_version.py
 import os
 import shutil
 import urllib
@@ -86,6 +87,6 @@ def clear_images():
 if __name__ == '__main__':
     clear_images()
     my_god_data_path = os.path.abspath(os.path.join(os.getcwd(), "../../../MyGodData"))
-    getImg("端午节", my_god_data_path + "/images")
+    getImg("儿童节", my_god_data_path + "/images")
 
 print("---------------------finsh------------------------")
